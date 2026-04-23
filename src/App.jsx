@@ -398,6 +398,12 @@ function WorkoutView({ config, onFinish, onCancel }) {
     }))
   }
 
+  function deleteCustomExercise(name) {
+    const updated = customExNames.filter(n => n !== name)
+    setCustomExNames(updated)
+    localStorage.setItem('gym_custom_exercises', JSON.stringify(updated))
+  }
+
   function addFreeExercise(name) {
     if (!allExNames.some(n => n.toLowerCase() === name.toLowerCase())) {
       const updated = [...customExNames, name]
@@ -602,8 +608,17 @@ function WorkoutView({ config, onFinish, onCancel }) {
                     + Add "{search.trim()}"
                   </div>
                 )}
-                {filtered.slice(0, 8).map((name, i) => (
-                  <div key={i} className="exercise-option" onClick={() => addFreeExercise(name)}>
+                {(search.length <= 1 ? customExNames : filtered.filter(n => customExNames.includes(n))).map((name, i) => (
+                  <div key={i} className="exercise-option" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ flex: 1 }} onClick={() => addFreeExercise(name)}>{name}</span>
+                    <button
+                      style={{ background: 'none', border: 'none', color: 'var(--text-dim)', fontSize: 16, cursor: 'pointer', padding: '0 4px', lineHeight: 1 }}
+                      onClick={e => { e.stopPropagation(); deleteCustomExercise(name) }}
+                    >✕</button>
+                  </div>
+                ))}
+                {search.length > 1 && filtered.filter(n => !customExNames.includes(n)).slice(0, 8).map((name, i) => (
+                  <div key={`p-${i}`} className="exercise-option" onClick={() => addFreeExercise(name)}>
                     {name}
                   </div>
                 ))}
