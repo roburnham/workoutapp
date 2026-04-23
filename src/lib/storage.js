@@ -62,7 +62,8 @@ export async function getWorkouts() {
 export async function getWorkoutsForMonth(year, month) {
   const pad = n => String(n).padStart(2, '0')
   const start = `${year}-${pad(month)}-01`
-  const end   = `${year}-${pad(month)}-31`
+  const lastDay = new Date(year, month, 0).getDate()
+  const end   = `${year}-${pad(month)}-${pad(lastDay)}`
   const { data, error } = await supabase
     .from('workouts')
     .select('id, date, session_type, name, type')
@@ -143,7 +144,8 @@ export async function getActivities() {
 export async function getActivitiesForMonth(year, month) {
   const pad = n => String(n).padStart(2, '0')
   const start = `${year}-${pad(month)}-01`
-  const end   = `${year}-${pad(month)}-31`
+  const lastDay = new Date(year, month, 0).getDate()
+  const end   = `${year}-${pad(month)}-${pad(lastDay)}`
   const { data, error } = await supabase
     .from('activities')
     .select('id, date, activity_type')
