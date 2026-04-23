@@ -353,9 +353,13 @@ function WorkoutView({ config, onFinish, onCancel }) {
   // Free workout state
   const [search, setSearch] = useState('')
   const [showSearch, setShowSearch] = useState(false)
-  const allExNames = Object.values(BLOCKS).flatMap(b => Object.values(b.sessions).flatMap(s => s.map(e => e.name)))
-  const uniqueExNames = [...new Set(allExNames)]
-  const filtered = search.length > 1 ? uniqueExNames.filter(n => n.toLowerCase().includes(search.toLowerCase())) : []
+  const [customExNames, setCustomExNames] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('gym_custom_exercises') ?? '[]') } catch { return [] }
+  })
+  const programExNames = Object.values(BLOCKS).flatMap(b => Object.values(b.sessions).flatMap(s => s.map(e => e.name)))
+  const allExNames = [...new Set([...programExNames, ...customExNames])]
+  const filtered = search.length > 1 ? allExNames.filter(n => n.toLowerCase().includes(search.toLowerCase())) : []
+  const isNew = search.trim().length > 0 && !allExNames.some(n => n.toLowerCase() === search.trim().toLowerCase())
 
   useEffect(() => {
     const id = setInterval(() => setElapsed(Math.floor((Date.now() - startRef.current) / 1000)), 1000)
@@ -395,6 +399,11 @@ function WorkoutView({ config, onFinish, onCancel }) {
   }
 
   function addFreeExercise(name) {
+    if (!allExNames.some(n => n.toLowerCase() === name.toLowerCase())) {
+      const updated = [...customExNames, name]
+      setCustomExNames(updated)
+      localStorage.setItem('gym_custom_exercises', JSON.stringify(updated))
+    }
     setExercises(prev => [...prev, {
       name, technique: null, reps: '', workingSets: 3, rest: null, sub1: null, sub2: null,
       note: '',
@@ -584,7 +593,7 @@ function WorkoutView({ config, onFinish, onCancel }) {
                     autoFocus
                   />
                 </div>
-                {search.trim().length > 0 && (
+                {isNew && (
                   <div
                     className="exercise-option"
                     style={{ borderLeft: '3px solid var(--upper)', color: 'var(--upper)' }}
