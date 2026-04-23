@@ -66,7 +66,8 @@ const SESSION_DOT_COLORS = {
   arms:   '#9b59b6',
 }
 
-function sessionColor(sessionType) {
+function sessionColor(sessionType, type) {
+  if (type === 'free') return '#1a1a1a'
   return SESSION_DOT_COLORS[sessionType] ?? '#888'
 }
 
@@ -95,7 +96,7 @@ function CalendarView({ onStartWorkout }) {
   const byDate = {}
   workouts.forEach(w => {
     byDate[w.date] = byDate[w.date] ?? []
-    byDate[w.date].push({ type: 'workout', color: sessionColor(w.session_type), name: w.name, session_type: w.session_type })
+    byDate[w.date].push({ type: 'workout', color: sessionColor(w.session_type, w.type), name: w.name, session_type: w.session_type })
   })
   activities.forEach(a => {
     byDate[a.date] = byDate[a.date] ?? []
@@ -161,6 +162,7 @@ function CalendarView({ onStartWorkout }) {
           { color: '#4a90d9', label: 'Upper' },
           { color: '#5cb85c', label: 'Lower' },
           { color: '#9b59b6', label: 'Arms' },
+          { color: '#1a1a1a', label: 'Free' },
           { color: 'var(--activity)', label: 'Activity' },
         ].map(l => (
           <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-muted)' }}>
