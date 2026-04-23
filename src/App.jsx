@@ -3,6 +3,44 @@ import './App.css'
 import { SESSION_INFO, ACTIVITY_TYPES, BLOCKS, getBlock, getSessionExercises } from './data/program'
 import { saveWorkout, getWorkouts, getActivities, getActivitiesForMonth, getWorkoutsForMonth, getPreviousWorkout, saveActivity, getCompletedSessionsForWeek, getWeekStatus } from './lib/storage'
 
+// ── Technique definitions ─────────────────────────────────────────────────────
+
+const TECHNIQUE_DEFS = {
+  'myo-reps': {
+    label: 'Myo-reps',
+    text: 'Myo-reps extend a set beyond failure by taking short mini-rests and cranking out a few extra reps in between. Only applied on the last exercise.',
+  },
+  'long-length partials': {
+    label: 'Long-length Partials',
+    text: 'A partial rep in the stretched aspect of the lift. For example on an assisted pull-up, you come about halfway up and do partial reps in the bottom (stretched) part of the movement.',
+  },
+  'integrated partials': {
+    label: 'Integrated Partials',
+    text: 'Instead of doing all reps as partials, you integrate them throughout the set by alternating between full ROM reps and long-length partial reps — one each.',
+  },
+  'mechanical dropset': {
+    label: 'Mechanical Dropset',
+    text: 'Instead of dropping the weight, you make the exercise easier by modifying your technique at set rep intervals — allowing extra reps. Example: stepping toward the cable machine on Cable Reverse Flyes.',
+  },
+  'dropset': {
+    label: 'Dropset',
+    text: 'Drop the weight back and perform more reps at the end of a set, immediately without rest.',
+  },
+  'static stretch': {
+    label: 'Static Stretch',
+    text: 'Hold a stretch in a fixed position after the last set of an exercise — typically 30 seconds. For example, after 3 sets on the leg press, hold a 30-second quad stretch.',
+  },
+}
+
+function getTechniqueDef(technique) {
+  if (!technique) return null
+  const lower = technique.toLowerCase()
+  for (const [key, def] of Object.entries(TECHNIQUE_DEFS)) {
+    if (lower.includes(key)) return def
+  }
+  return null
+}
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const TODAY = new Date()
@@ -308,6 +346,7 @@ function WorkoutView({ config, onFinish, onCancel }) {
   const [elapsed, setElapsed] = useState(0)
   const startRef = useRef(Date.now())
   const [saving, setSaving] = useState(false)
+  const [techModal, setTechModal] = useState(null)
 
   // Free workout state
   const [search, setSearch] = useState('')
@@ -445,7 +484,18 @@ function WorkoutView({ config, onFinish, onCancel }) {
 
                 {isOpen && (
                   <div className="ex-body">
-                    {ex.technique && <span className="technique-badge">⚡ {ex.technique}</span>}
+                    {ex.technique && (() => {
+                      const def = getTechniqueDef(ex.technique)
+                      return (
+                        <span
+                          className="technique-badge"
+                          style={def ? { cursor: 'pointer', textDecoration: 'underline dotted' } : {}}
+                          onClick={() => def && setTechModal(def)}
+                        >
+                          ⚡ {ex.technique}{def ? ' ?' : ''}
+                        </span>
+                      )
+                    })()}
 
                     {prevSets.length > 0 && (
                       <div className="prev-data">
@@ -562,6 +612,19 @@ function WorkoutView({ config, onFinish, onCancel }) {
           {saving ? 'Saving…' : 'Finish Workout'}
         </button>
       </div>
+
+      {techModal && (
+        <div className="modal-overlay" onClick={() => setTechModal(null)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-handle" />
+            <h2>⚡ {techModal.label}</h2>
+            <p style={{ fontSize: 15, lineHeight: 1.6, color: 'var(--text-muted)' }}>{techModal.text}</p>
+            <button className="btn btn-primary btn-full" style={{ marginTop: 20 }} onClick={() => setTechModal(null)}>
+              Got it
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

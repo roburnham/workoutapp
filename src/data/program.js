@@ -61,8 +61,8 @@ export const BLOCKS = {
         { name: 'Standing Calf Raise', technique: 'Calf Static Stretch (30 sec)', warmupSets: '1', workingSets: 3, reps: '10-12', earlyRPE: '~9-10', lastRPE: '10', rest: '~1-2 min', sub1: 'Leg Press Calf Press', sub2: 'Donkey Calf Raise' },
       ],
       arms: [
-        { name: 'Weak Point Exercise 1', technique: null, warmupSets: '1-3', workingSets: 3, reps: '8-12', earlyRPE: '~9', lastRPE: '~9-10', rest: '~1-3 min', sub1: 'See Weak Point Table', sub2: 'See Weak Point Table' },
-        { name: 'Weak Point Exercise 2 (optional)', technique: null, warmupSets: '1-3', workingSets: 2, reps: '8-12', earlyRPE: '~9', lastRPE: '~9-10', rest: '~1-3 min', sub1: 'See Weak Point Table', sub2: 'See Weak Point Table' },
+        { name: 'Hip Abduction', technique: null, warmupSets: '1-3', workingSets: 3, reps: '8-12', earlyRPE: '~9', lastRPE: '~9-10', rest: '~1-3 min', sub1: null, sub2: null },
+        { name: 'Hip Thrust', technique: null, warmupSets: '1-3', workingSets: 2, reps: '8-12', earlyRPE: '~9', lastRPE: '~9-10', rest: '~1-3 min', sub1: null, sub2: null },
         { name: 'Bayesian Cable Curl', technique: 'Long-length Partials (last set)', warmupSets: '1', workingSets: 3, reps: '10-12', earlyRPE: '~9-10', lastRPE: '10', rest: '~1-2 min', sub1: 'DB Incline Curl', sub2: 'DB Scott Curl' },
         { name: 'Seated DB French Press', technique: null, warmupSets: '1', workingSets: 3, reps: '10', earlyRPE: '~9-10', lastRPE: '10', rest: '~1-2 min', sub1: 'EZ-bar Skull Crusher', sub2: 'DB Skull Crusher' },
         { name: 'Bottom-2/3 Constant Tension Preacher Curl', technique: null, warmupSets: '1', workingSets: 2, reps: '12-15', earlyRPE: '~9-10', lastRPE: '10', rest: '~1-2 min', sub1: 'Bottom-2/3 EZ-Bar Curl', sub2: 'Spider Curl' },
@@ -109,8 +109,8 @@ export const BLOCKS = {
         { name: 'Standing Calf Raise', technique: 'Calf Static Stretch (30 sec)', warmupSets: '1', workingSets: 3, reps: '10-12', earlyRPE: '~9-10', lastRPE: '10', rest: '~1-2 min', sub1: 'Seated Calf Raise', sub2: 'Leg Press Calf Press' },
       ],
       arms: [
-        { name: 'Weak Point Exercise 1', technique: null, warmupSets: '1-3', workingSets: 3, reps: '8-12', earlyRPE: '~9', lastRPE: '~9-10', rest: '~1-3 min', sub1: 'See Weak Point Table', sub2: 'See Weak Point Table' },
-        { name: 'Weak Point Exercise 2 (optional)', technique: null, warmupSets: '1-3', workingSets: 2, reps: '8-12', earlyRPE: '~9', lastRPE: '~9-10', rest: '~1-3 min', sub1: 'See Weak Point Table', sub2: 'See Weak Point Table' },
+        { name: 'Hip Abduction', technique: null, warmupSets: '1-3', workingSets: 3, reps: '8-12', earlyRPE: '~9', lastRPE: '~9-10', rest: '~1-3 min', sub1: null, sub2: null },
+        { name: 'Hip Thrust', technique: null, warmupSets: '1-3', workingSets: 2, reps: '8-12', earlyRPE: '~9', lastRPE: '~9-10', rest: '~1-3 min', sub1: null, sub2: null },
         { name: 'Slow-Eccentric EZ-Bar Skull Crusher', technique: null, warmupSets: '1', workingSets: 3, reps: '10-12', earlyRPE: '~9-10', lastRPE: '10', rest: '~1-2 min', sub1: 'Slow-Eccentric DB Skull Crusher', sub2: 'Slow-Eccentric DB French Press' },
         { name: 'Slow-Eccentric Bayesian Curl', technique: 'Long-length Partials (last set)', warmupSets: '1', workingSets: 3, reps: '10-12', earlyRPE: '~9-10', lastRPE: '10', rest: '~1-2 min', sub1: 'Slow-Eccentric DB Incline Curl', sub2: 'Slow-Eccentric DB Scott Curl' },
         { name: 'Triceps Diverging Pressdown (Long Rope or 2 Ropes)', technique: null, warmupSets: '1', workingSets: 2, reps: '12-15', earlyRPE: '~9-10', lastRPE: '10', rest: '~1-2 min', sub1: 'Cable Triceps Kickback', sub2: 'DB Triceps Kickback' },
