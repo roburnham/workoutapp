@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import './App.css'
 import { SESSION_INFO, ACTIVITY_TYPES, BLOCKS, getBlock, getSessionExercises } from './data/program'
-import { saveWorkout, getWorkouts, getActivities, getActivitiesForMonth, getWorkoutsForMonth, getPreviousWorkout, saveActivity, getCompletedSessionsForWeek, getWeekStatus } from './lib/storage'
+import { saveWorkout, getWorkouts, getActivities, getActivitiesForMonth, getWorkoutsForMonth, getPreviousWorkout, saveActivity, getCompletedSessionsForWeek, getWeekStatus, deleteWorkout, deleteActivity } from './lib/storage'
 
 // ── Technique definitions ─────────────────────────────────────────────────────
 
@@ -633,7 +633,7 @@ function WorkoutView({ config, onFinish, onCancel }) {
 
 // ── History View ──────────────────────────────────────────────────────────────
 
-function HistoryView() {
+function HistoryView({ onDeleted }) {
   const [workouts, setWorkouts] = useState([])
   const [activities, setActivities] = useState([])
   const [expanded, setExpanded] = useState(new Set())
@@ -645,6 +645,28 @@ function HistoryView() {
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
+
+  async function handleDeleteWorkout(id) {
+    if (!confirm('Delete this workout?')) return
+    try {
+      await deleteWorkout(id)
+      setWorkouts(prev => prev.filter(w => w.id !== id))
+      onDeleted?.()
+    } catch (e) {
+      alert('Error: ' + e.message)
+    }
+  }
+
+  async function handleDeleteActivity(id) {
+    if (!confirm('Delete this activity?')) return
+    try {
+      await deleteActivity(id)
+      setActivities(prev => prev.filter(a => a.id !== id))
+      onDeleted?.()
+    } catch (e) {
+      alert('Error: ' + e.message)
+    }
+  }
 
   const allItems = [
     ...workouts.map(w => ({ ...w, kind: 'workout' })),
@@ -688,6 +710,10 @@ function HistoryView() {
                     <div className="history-name">{at?.emoji} {at?.label ?? item.activity_type}</div>
                     <div className="history-sub">{formatDate(item.date)}{item.duration_min ? ` · ${formatDuration(item.duration_min)}` : ''}</div>
                   </div>
+                  <button
+                    style={{ background: 'none', border: 'none', color: 'var(--text-dim)', fontSize: 16, cursor: 'pointer', padding: '4px 8px', lineHeight: 1 }}
+                    onClick={e => { e.stopPropagation(); handleDeleteActivity(item.id) }}
+                  >🗑</button>
                   <span style={{ color: 'var(--text-dim)', fontSize: 18 }}>{isOpen ? '▾' : '›'}</span>
                 </div>
                 {isOpen && item.notes && (
@@ -717,6 +743,10 @@ function HistoryView() {
                     {item.duration_min ? ` · ${formatDuration(item.duration_min)}` : ''}
                   </div>
                 </div>
+                <button
+                  style={{ background: 'none', border: 'none', color: 'var(--text-dim)', fontSize: 16, cursor: 'pointer', padding: '4px 8px', lineHeight: 1 }}
+                  onClick={e => { e.stopPropagation(); handleDeleteWorkout(item.id) }}
+                >🗑</button>
                 <span style={{ color: 'var(--text-dim)', fontSize: 18 }}>{isOpen ? '▾' : '›'}</span>
               </div>
               {isOpen && (
@@ -876,7 +906,7 @@ export default function App() {
     <div className="app">
       {tab === 'calendar' && <CalendarView onStartWorkout={startWorkout} refreshKey={refreshKey} />}
       {tab === 'today'    && <TodayView    onStartWorkout={startWorkout} />}
-      {tab === 'history'  && <HistoryView />}
+      {tab === 'history'  && <HistoryView onDeleted={() => setRefreshKey(k => k + 1)} />}
       {tab === 'log'      && <LogActivityView onSaved={() => { setTab('history'); setRefreshKey(k => k + 1) }} />}
       <BottomNav tab={tab} setTab={setTab} />
 

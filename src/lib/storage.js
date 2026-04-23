@@ -109,6 +109,16 @@ export async function getPreviousWorkout(sessionType, block) {
   return data?.[0] ?? null
 }
 
+export async function deleteWorkout(id) {
+  const { error } = await supabase.from('workouts').delete().eq('id', id)
+  if (error) throw error
+}
+
+export async function deleteActivity(id) {
+  const { error } = await supabase.from('activities').delete().eq('id', id)
+  if (error) throw error
+}
+
 // ── Activities ────────────────────────────────────────────────────────────────
 
 export async function saveActivity(activity) {
