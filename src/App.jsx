@@ -489,10 +489,10 @@ function WorkoutView({ config, onFinish, onCancel }) {
                       return (
                         <span
                           className="technique-badge"
-                          style={def ? { cursor: 'pointer', textDecoration: 'underline dotted' } : {}}
+                          style={def ? { cursor: 'pointer' } : {}}
                           onClick={() => def && setTechModal(def)}
                         >
-                          ⚡ {ex.technique}{def ? ' ?' : ''}
+                          ⚡ {ex.technique}
                         </span>
                       )
                     })()}
