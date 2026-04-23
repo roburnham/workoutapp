@@ -79,7 +79,7 @@ function useCurrentWeek() {
 
 // ── Calendar View ─────────────────────────────────────────────────────────────
 
-function CalendarView({ onStartWorkout }) {
+function CalendarView({ onStartWorkout, refreshKey }) {
   const [date, setDate] = useState(new Date(TODAY.getFullYear(), TODAY.getMonth(), 1))
   const [workouts, setWorkouts] = useState([])
   const [activities, setActivities] = useState([])
@@ -91,7 +91,7 @@ function CalendarView({ onStartWorkout }) {
   useEffect(() => {
     getWorkoutsForMonth(year, month).then(setWorkouts).catch(() => {})
     getActivitiesForMonth(year, month).then(setActivities).catch(() => {})
-  }, [year, month])
+  }, [year, month, refreshKey])
 
   const byDate = {}
   workouts.forEach(w => {
@@ -855,6 +855,7 @@ export default function App() {
   const [tab, setTab] = useState('today')
   const [activeWorkout, setActiveWorkout] = useState(null)
   const [weekBanner, setWeekBanner] = useState(null)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   function startWorkout(config) {
     setActiveWorkout(config ?? { sessionType: 'free', block: null, week: null })
@@ -863,6 +864,7 @@ export default function App() {
   function finishWorkout({ weekAdvanced, nextWeek } = {}) {
     setActiveWorkout(null)
     setTab('today')
+    setRefreshKey(k => k + 1)
     if (weekAdvanced) setWeekBanner(nextWeek)
   }
 
@@ -872,10 +874,10 @@ export default function App() {
 
   return (
     <div className="app">
-      {tab === 'calendar' && <CalendarView onStartWorkout={startWorkout} />}
+      {tab === 'calendar' && <CalendarView onStartWorkout={startWorkout} refreshKey={refreshKey} />}
       {tab === 'today'    && <TodayView    onStartWorkout={startWorkout} />}
       {tab === 'history'  && <HistoryView />}
-      {tab === 'log'      && <LogActivityView onSaved={() => setTab('history')} />}
+      {tab === 'log'      && <LogActivityView onSaved={() => { setTab('history'); setRefreshKey(k => k + 1) }} />}
       <BottomNav tab={tab} setTab={setTab} />
 
       {weekBanner && (
